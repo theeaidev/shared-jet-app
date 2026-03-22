@@ -70,10 +70,13 @@ class Auth extends _$Auth {
   }
 
   Future<Uri?> getUserStripeLink({String? price}) async {
-    String? baseUrl = (kIsWeb) ? Uri.base.origin : null;
+    // On web use the current origin; on mobile use a placeholder return URL
+    String returnUrl = (kIsWeb)
+        ? Uri.base.origin
+        : 'https://benplcihmoqqlfklkpgw.supabase.co';
 
     var res = await client.functions.invoke("get_stripe_url", body: {
-      "return_url": baseUrl,
+      "return_url": returnUrl,
       "price": price,
     });
     String? redirectUrl = res.data["redirect_url"];

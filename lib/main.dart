@@ -21,7 +21,7 @@ class MyApp extends ConsumerWidget {
   Widget build(context, ref) {
     final goRouter = ref.watch(routerProvider);
     return MaterialApp.router(
-      title: 'DevToDollars',
+      title: 'Share Jet',
       debugShowCheckedModeBanner: false,
       routerConfig: goRouter,
       theme: ThemeData(

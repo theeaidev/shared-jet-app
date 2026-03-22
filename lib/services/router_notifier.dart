@@ -5,6 +5,7 @@ import 'package:devtodollars/components/dialog_page.dart';
 import 'package:devtodollars/components/reset_password_dialog.dart';
 import 'package:devtodollars/screens/auth_screen.dart';
 import 'package:devtodollars/screens/home_screen.dart';
+import 'package:devtodollars/screens/intro_screen.dart';
 import 'package:devtodollars/screens/payments_screen.dart';
 import 'package:devtodollars/services/auth_notifier.dart';
 
@@ -25,23 +26,21 @@ GoRouter router(RouterRef ref) {
       return authState.when(
         data: (user) {
           // build initial path
-          String? path = initUrl?.path;
-          final queryString = initUrl?.query.trim() ?? "";
-          if (queryString.isNotEmpty && path != null) {
-            path += "?$queryString";
+          // Path variable removed because the routing uses absolute paths now
+          final isLoggingIn = state.uri.path == '/login';
+          final isIntro = state.uri.path == '/intro';
+
+          if (user == null) {
+            if (isLoggingIn || isIntro) {
+              return null; // Allowed unauthenticated routes
+            }
+            return '/intro'; // Otherwise go to intro
+          } else {
+            if (isLoggingIn || isIntro || state.uri.path == '/loading') {
+              return '/'; // If authenticated, cannot visit login/intro/loading
+            }
+            return null;
           }
-          // If user is not authenticated, direct to login screen
-          if (user == null && initUrl?.path != '/login') {
-            return '/login';
-          }
-          // If user is authenticated and trying to access login or loading, direct to home
-          if (user != null &&
-              (initUrl?.path == '/login' || initUrl?.path == '/loading')) {
-            return "/";
-          }
-          // After handling initial redirection, clear initUrl to prevent repeated redirections
-          initUrl = null;
-          return path;
         },
         error: (_, __) => "/loading",
         loading: () => "/loading",
@@ -56,6 +55,13 @@ GoRouter router(RouterRef ref) {
         },
       ),
       GoRoute(
+        name: 'intro',
+        path: '/intro',
+        builder: (context, state) {
+          return const IntroScreen();
+        },
+      ),
+      GoRoute(
         name: 'login',
         path: '/login',
         builder: (context, state) {
@@ -66,7 +72,7 @@ GoRouter router(RouterRef ref) {
         name: 'home',
         path: '/',
         builder: (context, state) {
-          return const HomeScreen(title: "DevToDollars");
+          return const HomeScreen(title: "Share Jet");
         },
         routes: [
           GoRoute(

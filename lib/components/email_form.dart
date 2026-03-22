@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:devtodollars/components/recover_password_dialog.dart';
 import 'package:devtodollars/services/auth_notifier.dart';
 
@@ -107,15 +108,38 @@ class _EmailFormState extends ConsumerState<EmailForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text((action == AuthAction.signIn) ? "Login" : "Create an account",
-                style: textTheme.titleLarge),
-            const SizedBox(height: 16),
+            Text((action == AuthAction.signIn) ? "Log in" : "Create an account",
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+                textAlign: TextAlign.center),
+            const SizedBox(height: 24),
             TextFormField(
               controller: emailController,
               enabled: !loading,
               autofocus: true,
-              decoration: const InputDecoration(
-                  labelText: "Email", border: OutlineInputBorder()),
+              style: GoogleFonts.lato(color: Colors.black87),
+              decoration: InputDecoration(
+                labelText: "Email",
+                labelStyle: GoogleFonts.lato(color: Colors.black54),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.black12),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.black12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.black54),
+                ),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                filled: true,
+                fillColor: Colors.grey.shade50,
+              ),
               validator: (_) => validateEmailField(),
               keyboardType: TextInputType.emailAddress,
               autofillHints: const [AutofillHints.email],
@@ -124,8 +148,26 @@ class _EmailFormState extends ConsumerState<EmailForm> {
             TextFormField(
               controller: pwController,
               enabled: !loading,
-              decoration: const InputDecoration(
-                  labelText: "Password", border: OutlineInputBorder()),
+              style: GoogleFonts.lato(color: Colors.black87),
+              decoration: InputDecoration(
+                labelText: "Password",
+                labelStyle: GoogleFonts.lato(color: Colors.black54),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.black12),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.black12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.black54),
+                ),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                filled: true,
+                fillColor: Colors.grey.shade50,
+              ),
               obscureText: true,
               validator: (_) => validatePasswordField(),
               autofillHints: const [AutofillHints.password],
@@ -138,9 +180,25 @@ class _EmailFormState extends ConsumerState<EmailForm> {
                       TextFormField(
                         controller: confirmPwController,
                         enabled: !loading,
-                        decoration: const InputDecoration(
+                        style: GoogleFonts.lato(color: Colors.black87),
+                        decoration: InputDecoration(
                           labelText: "Confirm Password",
-                          border: OutlineInputBorder(),
+                          labelStyle: GoogleFonts.lato(color: Colors.black54),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(color: Colors.black12),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(color: Colors.black12),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(color: Colors.black54),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                          filled: true,
+                          fillColor: Colors.grey.shade50,
                         ),
                         obscureText: true,
                         validator: (_) => validateConfirmPasswordField(),
@@ -176,9 +234,15 @@ class _EmailFormState extends ConsumerState<EmailForm> {
                         errorMessage = "";
                       });
                     },
-                    child: Text((action == AuthAction.signIn)
-                        ? "Don't have an account?"
-                        : "Have an account?"),
+                    child: Text(
+                      (action == AuthAction.signIn)
+                          ? "Don't have an account?"
+                          : "Already have an account?",
+                      style: GoogleFonts.lato(
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                   TextButton(
                     onPressed: () {
@@ -191,9 +255,11 @@ class _EmailFormState extends ConsumerState<EmailForm> {
                       );
                     },
                     child: Text(
-                      "Forgot Password",
-                      style: textTheme.bodyMedium
-                          ?.copyWith(color: colorScheme.outline),
+                      "Forgot Password?",
+                      style: GoogleFonts.lato(
+                        color: const Color(0xFFD4AF37), // Gold highlight
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],
@@ -202,15 +268,24 @@ class _EmailFormState extends ConsumerState<EmailForm> {
             ElevatedButton(
               onPressed: (loading) ? null : submitForm,
               style: ElevatedButton.styleFrom(
-                backgroundColor: colorScheme.primary,
-                foregroundColor: colorScheme.onPrimary,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Text(
-                  (action == AuthAction.signUp) ? "Create Acccount" : "Login",
+                backgroundColor: const Color(0xFF111111),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                elevation: 0,
               ),
+              child: loading
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                    )
+                  : Text(
+                      (action == AuthAction.signUp) ? "Sign Up" : "Sign In",
+                      style: GoogleFonts.lato(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
             ),
           ],
         ),
