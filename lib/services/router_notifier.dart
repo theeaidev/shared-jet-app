@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:posthog_flutter/posthog_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:devtodollars/components/dialog_page.dart';
 import 'package:devtodollars/components/reset_password_dialog.dart';
@@ -22,7 +21,6 @@ GoRouter router(RouterRef ref) {
   return GoRouter(
     initialLocation: initUrl?.path, // DO NOT REMOVE
     navigatorKey: navigatorKey,
-    observers: [PosthogObserver()],
     redirect: (context, state) async {
       return authState.when(
         data: (user) {

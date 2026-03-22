@@ -76,12 +76,11 @@ class _EmailFormState extends ConsumerState<EmailForm> {
             showDialog(
               context: context,
               builder: (_) => AlertDialog(
-                title: const Text("Check your Email!"),
-                content: const Text(
-                    "We sent an email from hi@devtodollars.com to verify your email"),
+                title: const Text("Registro completado"),
+                content: const Text("Puedes iniciar sesión."),
                 actions: [
                   TextButton(
-                      onPressed: context.pop, child: const Text("Ok Matt."))
+                      onPressed: context.pop, child: const Text("Aceptar"))
                 ],
               ),
             );

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
 final Uri initUrl = Uri.base;
+const String mobileRedirectUrl = 'com.example.test://login-callback/';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -20,11 +21,10 @@ class _AuthScreenState extends State<AuthScreen> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text("Check your Email!"),
-        content: const Text(
-            "We sent an email from hi@devtodollars.com to verify your email"),
+        title: const Text("Registro completado"),
+        content: const Text("Puedes iniciar sesión."),
         actions: [
-          TextButton(onPressed: context.pop, child: const Text("Ok Matt."))
+          TextButton(onPressed: context.pop, child: const Text("Aceptar"))
         ],
       ),
     );
@@ -42,13 +42,10 @@ class _AuthScreenState extends State<AuthScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               SupaSocialsAuth(
-                socialProviders: const [
-                  OAuthProvider.github,
-                  OAuthProvider.google
-                ],
+                socialProviders: const [OAuthProvider.google],
                 onSuccess: (_) {},
                 showSuccessSnackBar: false,
-                redirectUrl: (kIsWeb) ? initUrl.toString() : null,
+                redirectUrl: kIsWeb ? initUrl.toString() : mobileRedirectUrl,
               ),
               const SizedBox(height: 16),
               Padding(

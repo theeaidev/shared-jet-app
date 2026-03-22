@@ -41,3 +41,13 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Entornos y secretos locales
+env.json
+env.local.json
+.env
+
+# Directorios de compilación y cachés generados
+.dart_appdata/
+android/build/
+android/.gradle-user/

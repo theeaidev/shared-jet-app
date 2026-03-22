@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:posthog_flutter/posthog_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supa;
 // ignore: depend_on_referenced_packages
@@ -9,6 +8,8 @@ import 'package:path/path.dart' as p;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'auth_notifier.g.dart';
+
+const String mobileRedirectUrl = 'com.example.test://login-callback/';
 
 @Riverpod(keepAlive: true)
 class Auth extends _$Auth {
@@ -23,16 +24,6 @@ class Auth extends _$Auth {
     final streamSub = client.auth.onAuthStateChange.listen((authState) async {
       final session = authState.session;
       authStateController.add(session);
-
-      // capture posthog events for analytics
-      if (session != null) {
-        await Posthog().identify(
-          userId: session.user.id,
-          userProperties: {"email": session.user.email ?? ""},
-        );
-      } else {
-        await Posthog().reset();
-      }
     });
 
     ref.onDispose(() {
@@ -50,10 +41,10 @@ class Auth extends _$Auth {
   }
 
   Future<void> signInWithOAuth(supa.OAuthProvider provider) async {
-    String? baseUrl = (kIsWeb) ? Uri.base.origin : null;
+    final redirectTo = kIsWeb ? Uri.base.origin : mobileRedirectUrl;
     await client.auth.signInWithOAuth(
       provider,
-      redirectTo: baseUrl,
+      redirectTo: redirectTo,
       queryParams: {
         'access_type': 'offline',
         'prompt': 'consent',
