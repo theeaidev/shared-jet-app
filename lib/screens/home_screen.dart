@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:devtodollars/models/booking_checkout.dart';
 import 'package:devtodollars/services/auth_notifier.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -31,6 +32,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool _isSearching = false;
   bool _showResults = false;
   List<Map<String, dynamic>> _mockResults = [];
+  String _lastSearchOrigin = 'Madrid';
+  String _lastSearchDestination = 'Ibiza';
+  String _lastSearchDateLabel = 'Pronto';
 
   void _performSearch() {
     setState(() {
@@ -46,6 +50,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       String dateStr = _selectedDate != null ? _formatDate(_selectedDate!) : "Pronto";
       
       setState(() {
+        _lastSearchOrigin = orig;
+        _lastSearchDestination = dest;
+        _lastSearchDateLabel = dateStr;
         _isSearching = false;
         _showResults = true;
         _mockResults = [
@@ -204,7 +211,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Solicitud de reserva enviada.")));
+                        final seed = CheckoutFlightSeed.fromSearchResult(
+                          result: result,
+                          origin: _lastSearchOrigin,
+                          destination: _lastSearchDestination,
+                          dateLabel: _lastSearchDateLabel,
+                          isRoundTrip: _isRoundTrip,
+                          isFlexibleDate: _isFlexibleDate,
+                          passengers: _passengers,
+                          budget: _budget,
+                          onlyEmptyLegs: _onlyEmptyLegs,
+                          nearbyAirports: _nearbyAirports,
+                          travelPreference: _preference,
+                        );
+                        context.pushNamed('checkout', extra: seed);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black87,
@@ -212,7 +232,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
-                      child: Text("UNIRSE AL VUELO", style: GoogleFonts.lato(fontWeight: FontWeight.bold)),
+                      child: Text("RESERVA GUIADA", style: GoogleFonts.lato(fontWeight: FontWeight.bold)),
                     )
                   )
                 ]

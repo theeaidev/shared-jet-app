@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:devtodollars/components/dialog_page.dart';
 import 'package:devtodollars/components/reset_password_dialog.dart';
+import 'package:devtodollars/models/booking_checkout.dart';
+import 'package:devtodollars/screens/checkout_screen.dart';
 import 'package:devtodollars/screens/auth_screen.dart';
 import 'package:devtodollars/screens/home_screen.dart';
 import 'package:devtodollars/screens/intro_screen.dart';
@@ -85,11 +87,29 @@ GoRouter router(RouterRef ref) {
         ],
       ),
       GoRoute(
+        name: 'checkout',
+        path: '/checkout',
+        builder: (BuildContext context, GoRouterState state) {
+          final seed = state.extra is CheckoutFlightSeed
+              ? state.extra as CheckoutFlightSeed
+              : CheckoutFlightSeed.fromQueryParameters(state.uri.queryParameters);
+          return CheckoutScreen(seed: seed);
+        },
+      ),
+      GoRoute(
         name: 'payments',
         path: '/payments',
         builder: (BuildContext context, GoRouterState state) {
           final qp = state.uri.queryParameters;
-          return PaymentsScreen(price: qp["price"]);
+          return PaymentsScreen(
+            price: qp["price"],
+            holdId: qp["hold_id"],
+            bookingId: qp["booking_id"],
+            expiresAt: qp["expires_at"],
+            origin: qp["origin"],
+            destination: qp["destination"],
+            dateLabel: qp["date"],
+          );
         },
       ),
     ],

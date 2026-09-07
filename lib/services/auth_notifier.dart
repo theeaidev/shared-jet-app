@@ -69,7 +69,11 @@ class Auth extends _$Auth {
     );
   }
 
-  Future<Uri?> getUserStripeLink({String? price}) async {
+  Future<Uri?> getUserStripeLink({
+    String? price,
+    String? holdId,
+    String? bookingId,
+  }) async {
     // On web use the current origin; on mobile use a placeholder return URL
     String returnUrl = (kIsWeb)
         ? Uri.base.origin
@@ -78,6 +82,8 @@ class Auth extends _$Auth {
     var res = await client.functions.invoke("get_stripe_url", body: {
       "return_url": returnUrl,
       "price": price,
+      if (holdId != null) "hold_id": holdId,
+      if (bookingId != null) "booking_id": bookingId,
     });
     String? redirectUrl = res.data["redirect_url"];
     if (redirectUrl is String) {
